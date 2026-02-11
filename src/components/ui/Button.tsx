@@ -1,24 +1,38 @@
-import type { LucideIcon } from 'lucide-react';
+import React from 'react'
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  icon?: LucideIcon;
-  variant?: 'primary' | 'secondary' | 'danger';
+  variant?: 'primary' | 'secondary' | 'outline' | 'danger'
+  size?: 'sm' | 'md' | 'lg'
 }
 
-export const Button = ({ title, icon: Icon, variant = 'primary', className, ...props }: ButtonProps) => {
+export const Button: React.FC<ButtonProps> = ({ 
+  children, 
+  variant = 'primary', 
+  size = 'md', 
+  className = '', 
+  ...props 
+}) => {
+  const baseStyles = "inline-flex items-center justify-center font-bold transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+  
   const variants = {
     primary: "bg-white text-black hover:bg-zinc-200",
-    secondary: "bg-zinc-800 text-white hover:bg-zinc-700",
-    danger: "bg-red-600 text-white hover:bg-red-500"
-  };
+    secondary: "bg-zinc-800 text-white hover:bg-zinc-700 border border-zinc-700",
+    outline: "bg-transparent text-white border border-zinc-700 hover:border-white",
+    danger: "bg-red-600 text-white hover:bg-red-700"
+  }
+
+  const sizes = {
+    sm: "px-3 py-1.5 text-xs rounded-md",
+    md: "px-6 py-3 text-sm rounded-xl",
+    lg: "px-8 py-4 text-base rounded-2xl"
+  }
 
   return (
     <button 
-      className={`flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-bold transition-all active:scale-95 ${variants[variant]} ${className}`}
+      className={`${baseStyles} ${variants[variant]} ${sizes[size]} ${className}`}
       {...props}
     >
-      {Icon && <Icon size={20} />}
-      {props.children}
+      {children}
     </button>
-  );
-};
+  )
+}

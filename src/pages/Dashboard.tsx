@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
 import { LogOut, Shield, Smartphone, Zap, User, Upload } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import toast from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
 import Sidebar from '../components/layout/Sidebar'
@@ -14,20 +14,42 @@ export default function Dashboard() {
   const [profileImage, setProfileImage] = useState<string>('')
   const [isUploading, setIsUploading] = useState(false)
 
+  useEffect(() => {
+    if (user) {
+      getProfile()
+    }
+  }, [user])
+
+  const getProfile = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('avatar_url')
+        .eq('id', user?.id)
+        .single()
+
+      if (error && error.code !== 'PGRST116') throw error
+      if (data?.avatar_url) setProfileImage(data.avatar_url)
+    } catch (error) {
+      console.error('Error loading profile:', error)
+    }
+  }
+
   const handleLogout = async () => {
     await supabase.auth.signOut()
     toast.success('Berhasil keluar!')
-    navigate('/')
+    navigate('/login')
   }
 
   const handleProfileImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
-    if (!file) return
+    if (!file || !user) return
 
     setIsUploading(true)
     try {
       const fileExt = file.name.split('.').pop()
-      const fileName = `${user?.id}-${Date.now()}.${fileExt}`
+      const fileName = `${user.id}-${Date.now()}.${fileExt}`
+      
       const { error: uploadError } = await supabase.storage
         .from('profile-images')
         .upload(fileName, file)
@@ -38,15 +60,16 @@ export default function Dashboard() {
         .from('profile-images')
         .getPublicUrl(fileName)
 
-      await supabase
+      const { error: upsertError } = await supabase
         .from('profiles')
-        .upsert({ id: user?.id, avatar_url: publicUrl })
+        .upsert({ id: user.id, avatar_url: publicUrl, updated_at: new Date() })
+
+      if (upsertError) throw upsertError
 
       setProfileImage(publicUrl)
-      toast.success('Foto profil berhasil diperbarui!')
-    } catch (error) {
-      toast.error('Gagal upload foto profil')
-      console.error(error)
+      toast.success('Foto profil diperbarui!')
+    } catch (error: any) {
+      toast.error(error.message || 'Gagal upload foto profil')
     } finally {
       setIsUploading(false)
     }
@@ -57,8 +80,8 @@ export default function Dashboard() {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.3,
+        staggerChildren: 0.1,
+        delayChildren: 0.2,
       },
     },
   }
@@ -68,7 +91,7 @@ export default function Dashboard() {
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.8 },
+      transition: { duration: 0.5 },
     },
   }
 
@@ -81,7 +104,7 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-black text-white font-sans selection:bg-white selection:text-black">
       <Sidebar />
-      {/* Glass Navbar */}
+      
       <nav className="sticky top-0 z-50 backdrop-blur-md bg-black/70 border-b border-zinc-800 p-4">
         <div className="max-w-6xl mx-auto flex justify-between items-center">
           <div className="flex items-center gap-3">
@@ -112,7 +135,6 @@ export default function Dashboard() {
           </motion.p>
         </motion.header>
 
-        {/* Status Cards */}
         <motion.div 
           className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12"
           variants={containerVariants}
@@ -136,12 +158,11 @@ export default function Dashboard() {
           ))}
         </motion.div>
 
-        {/* Quick Action */}
         <motion.div 
           className="p-1 w-full bg-gradient-to-r from-zinc-800 via-zinc-400 to-zinc-800 rounded-[2.5rem]"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 1.2 }}
+          transition={{ duration: 0.8, delay: 0.5 }}
         >
            <div className="bg-black rounded-[2.4rem] p-10 flex flex-col md:flex-row items-center justify-between gap-8">
               <div>
@@ -154,12 +175,11 @@ export default function Dashboard() {
            </div>
         </motion.div>
 
-        {/* Profile Settings Section */}
         <motion.section 
           className="mt-16"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 1.4 }}
+          transition={{ duration: 0.8, delay: 0.6 }}
         >
           <div className="bg-zinc-900 border border-zinc-800 rounded-[2rem] p-8">
             <div className="flex items-center gap-3 mb-8">
@@ -168,11 +188,10 @@ export default function Dashboard() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {/* Profile Picture */}
               <div>
                 <label className="text-sm font-medium text-zinc-400 block mb-4">Foto Profil</label>
-                <div className="relative group">
-                  <div className="w-32 h-32 rounded-2xl bg-zinc-800 border-2 border-dashed border-zinc-700 flex items-center justify-center overflow-hidden">
+                <div className="relative group w-32 h-32">
+                  <div className="w-full h-full rounded-2xl bg-zinc-800 border-2 border-dashed border-zinc-700 flex items-center justify-center overflow-hidden">
                     {profileImage ? (
                       <img src={profileImage} alt="Profile" className="w-full h-full object-cover" />
                     ) : (
@@ -189,31 +208,27 @@ export default function Dashboard() {
                     />
                     <div className="text-center">
                       <Upload size={20} className="text-white mx-auto mb-1" />
-                      <p className="text-xs text-white">
-                        {isUploading ? 'Uploading...' : 'Upload'}
+                      <p className="text-[10px] text-white uppercase tracking-tighter">
+                        {isUploading ? 'Uploading...' : 'Change'}
                       </p>
                     </div>
                   </label>
                 </div>
               </div>
 
-              {/* User Info */}
-              <div>
-                <label className="text-sm font-medium text-zinc-400 block mb-4">Email</label>
-                <div className="bg-black rounded-lg p-4 border border-zinc-700">
-                  <p className="text-white font-medium">{user?.email}</p>
+              <div className="space-y-6">
+                <div>
+                  <label className="text-[10px] uppercase tracking-widest text-zinc-500 block mb-2">Email Address</label>
+                  <div className="bg-black rounded-xl p-4 border border-zinc-800">
+                    <p className="text-white font-medium">{user?.email}</p>
+                  </div>
                 </div>
 
-                <label className="text-sm font-medium text-zinc-400 block mb-4 mt-6">User ID</label>
-                <div className="bg-black rounded-lg p-4 border border-zinc-700">
-                  <p className="text-zinc-400 text-xs font-mono break-all">{user?.id}</p>
-                </div>
-
-                <label className="text-sm font-medium text-zinc-400 block mb-4 mt-6">Last Sign In</label>
-                <div className="bg-black rounded-lg p-4 border border-zinc-700">
-                  <p className="text-zinc-400 text-sm">
-                    {user?.last_sign_in_at ? new Date(user.last_sign_in_at).toLocaleString() : 'N/A'}
-                  </p>
+                <div>
+                  <label className="text-[10px] uppercase tracking-widest text-zinc-500 block mb-2">User ID</label>
+                  <div className="bg-black rounded-xl p-4 border border-zinc-800">
+                    <p className="text-zinc-500 text-[10px] font-mono break-all">{user?.id}</p>
+                  </div>
                 </div>
               </div>
             </div>

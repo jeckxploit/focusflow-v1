@@ -1,23 +1,20 @@
 import { motion } from 'framer-motion'
-import { LogOut, Shield, Smartphone, Zap, User, Upload } from 'lucide-react'
+import { Shield, Smartphone, Zap, User, Upload } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import toast from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
-import Sidebar from '../components/layout/Sidebar'
 import { Button } from '../components/ui/Button'
 import { useAuth } from '../hooks/useAuth'
 import { supabase } from '../services/supabase'
 
 export default function Dashboard() {
-  const { user, loading } = useAuth()
+  const { user } = useAuth()
   const navigate = useNavigate()
   const [profileImage, setProfileImage] = useState<string>('')
   const [isUploading, setIsUploading] = useState(false)
 
   useEffect(() => {
-    if (user) {
-      getProfile()
-    }
+    if (user) getProfile()
   }, [user])
 
   const getProfile = async () => {
@@ -33,12 +30,6 @@ export default function Dashboard() {
     } catch (error) {
       console.error('Error loading profile:', error)
     }
-  }
-
-  const handleLogout = async () => {
-    await supabase.auth.signOut()
-    toast.success('Berhasil keluar!')
-    navigate('/login')
   }
 
   const handleProfileImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -79,162 +70,133 @@ export default function Dashboard() {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.2,
-      },
+      transition: { staggerChildren: 0.1, delayChildren: 0.2 },
     },
   }
 
   const itemVariants = {
     hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.5 },
-    },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
   }
 
-  if (loading) return (
-    <div className="min-h-screen bg-black flex items-center justify-center">
-      <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-white"></div>
-    </div>
-  )
-
   return (
-    <div className="min-h-screen bg-black text-white font-sans selection:bg-white selection:text-black">
-      <Sidebar />
-      
-      <nav className="sticky top-0 z-50 backdrop-blur-md bg-black/70 border-b border-zinc-800 p-4">
-        <div className="max-w-6xl mx-auto flex justify-between items-center">
-          <div className="flex items-center gap-3">
-            <img src="/pwa-192.png" className="w-8 h-8 object-contain" alt="Logo" />
-            <span className="font-black tracking-tighter text-xl uppercase italic">Jeck</span>
-          </div>
-          <Button variant="secondary" onClick={handleLogout} className="text-xs px-4 py-2 uppercase tracking-widest">
-            <LogOut size={14} className="mr-2" /> Logout
-          </Button>
-        </div>
-      </nav>
+    <>
+      <motion.header 
+        className="mb-12"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        <motion.div variants={itemVariants} className="inline-block px-3 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-[10px] uppercase tracking-[0.2em] text-zinc-500 mb-4">
+          System Operational
+        </motion.div>
+        <motion.h1 variants={itemVariants} className="text-5xl md:text-7xl font-black tracking-tighter mb-4 leading-none">
+          HALO, <span className="text-zinc-500">{user?.email?.split('@')[0]}!</span>
+        </motion.h1>
+        <motion.p variants={itemVariants} className="text-zinc-500 max-w-xl text-lg leading-relaxed">
+          Template kamu sudah terhubung ke mesin produksi. Gunakan panel di bawah untuk mulai membangun 30 aplikasi PWA.
+        </motion.p>
+      </motion.header>
 
-      <main className="max-w-6xl mx-auto p-6 lg:p-12">
-        <motion.header 
-          className="mb-12"
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-        >
-          <motion.div variants={itemVariants} className="inline-block px-3 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-[10px] uppercase tracking-[0.2em] text-zinc-500 mb-4">
-            System Operational
+      <motion.div 
+        className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        {[
+          { label: 'PWA ENGINE', desc: 'Installable on mobile', icon: Smartphone },
+          { label: 'SUPABASE DB', desc: 'Secure & Real-time', icon: Shield },
+          { label: 'FAST VITE', desc: 'Lightning production', icon: Zap },
+        ].map((item, i) => (
+          <motion.div 
+            key={i} 
+            variants={itemVariants}
+            className="group p-8 rounded-[2rem] bg-zinc-900 border border-zinc-800 hover:border-zinc-400 transition-all duration-500 cursor-default"
+          >
+            <item.icon className="text-white mb-6 group-hover:scale-110 transition-transform" size={32} />
+            <h3 className="text-sm font-bold tracking-widest uppercase mb-1">{item.label}</h3>
+            <p className="text-zinc-500 text-sm leading-relaxed">{item.desc}</p>
           </motion.div>
-          <motion.h1 variants={itemVariants} className="text-5xl md:text-7xl font-black tracking-tighter mb-4 leading-none">
-            HALO, <span className="text-zinc-500">{user?.email?.split('@')[0]}!</span>
-          </motion.h1>
-          <motion.p variants={itemVariants} className="text-zinc-500 max-w-xl text-lg leading-relaxed">
-            Template kamu sudah terhubung ke mesin produksi. Gunakan panel di bawah untuk mulai membangun 30 aplikasi PWA.
-          </motion.p>
-        </motion.header>
+        ))}
+      </motion.div>
 
-        <motion.div 
-          className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12"
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-        >
-          {[
-            { label: 'PWA ENGINE', desc: 'Installable on mobile', icon: Smartphone },
-            { label: 'SUPABASE DB', desc: 'Secure & Real-time', icon: Shield },
-            { label: 'FAST VITE', desc: 'Lightning production', icon: Zap },
-          ].map((item, i) => (
-            <motion.div 
-              key={i} 
-              variants={itemVariants}
-              className="group p-8 rounded-[2rem] bg-zinc-900 border border-zinc-800 hover:border-zinc-400 transition-all duration-500 cursor-default"
-            >
-              <item.icon className="text-white mb-6 group-hover:scale-110 transition-transform" size={32} />
-              <h3 className="text-sm font-bold tracking-widest uppercase mb-1">{item.label}</h3>
-              <p className="text-zinc-500 text-sm leading-relaxed">{item.desc}</p>
-            </motion.div>
-          ))}
-        </motion.div>
+      <motion.div 
+        className="p-1 w-full bg-gradient-to-r from-zinc-800 via-zinc-400 to-zinc-800 rounded-[2.5rem]"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.5 }}
+      >
+         <div className="bg-black rounded-[2.4rem] p-10 flex flex-col md:flex-row items-center justify-between gap-8">
+            <div>
+              <h2 className="text-2xl font-bold mb-2">Siap untuk Hari Ke-2?</h2>
+              <p className="text-zinc-500">Besok kita akan meng-clone mesin ini menjadi aplikasi Idul Fitri Gallery.</p>
+            </div>
+            <Button onClick={() => navigate('/projects')} className="w-full md:w-auto px-10 rounded-full py-4 text-sm uppercase tracking-widest">
+              Mulai Produksi
+            </Button>
+         </div>
+      </motion.div>
 
-        <motion.div 
-          className="p-1 w-full bg-gradient-to-r from-zinc-800 via-zinc-400 to-zinc-800 rounded-[2.5rem]"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.5 }}
-        >
-           <div className="bg-black rounded-[2.4rem] p-10 flex flex-col md:flex-row items-center justify-between gap-8">
-              <div>
-                <h2 className="text-2xl font-bold mb-2">Siap untuk Hari Ke-2?</h2>
-                <p className="text-zinc-500">Besok kita akan meng-clone mesin ini menjadi aplikasi Idul Fitri Gallery.</p>
+      <motion.section 
+        className="mt-16"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.6 }}
+      >
+        <div className="bg-zinc-900 border border-zinc-800 rounded-[2rem] p-8">
+          <div className="flex items-center gap-3 mb-8">
+            <User size={24} className="text-white" />
+            <h2 className="text-2xl font-bold">Profile Settings</h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div>
+              <label className="text-sm font-medium text-zinc-400 block mb-4">Foto Profil</label>
+              <div className="relative group w-32 h-32">
+                <div className="w-full h-full rounded-2xl bg-zinc-800 border-2 border-dashed border-zinc-700 flex items-center justify-center overflow-hidden">
+                  {profileImage ? (
+                    <img src={profileImage} alt="Profile" className="w-full h-full object-cover" />
+                  ) : (
+                    <User size={48} className="text-zinc-600" />
+                  )}
+                </div>
+                <label className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl flex items-center justify-center cursor-pointer">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleProfileImageUpload}
+                    disabled={isUploading}
+                    className="hidden"
+                  />
+                  <div className="text-center">
+                    <Upload size={20} className="text-white mx-auto mb-1" />
+                    <p className="text-[10px] text-white uppercase tracking-tighter">
+                      {isUploading ? 'Uploading...' : 'Change'}
+                    </p>
+                  </div>
+                </label>
               </div>
-              <Button onClick={() => navigate('/projects')} className="w-full md:w-auto px-10 rounded-full py-4 text-sm uppercase tracking-widest">
-                Mulai Produksi
-              </Button>
-           </div>
-        </motion.div>
-
-        <motion.section 
-          className="mt-16"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-        >
-          <div className="bg-zinc-900 border border-zinc-800 rounded-[2rem] p-8">
-            <div className="flex items-center gap-3 mb-8">
-              <User size={24} className="text-white" />
-              <h2 className="text-2xl font-bold">Profile Settings</h2>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="space-y-6">
               <div>
-                <label className="text-sm font-medium text-zinc-400 block mb-4">Foto Profil</label>
-                <div className="relative group w-32 h-32">
-                  <div className="w-full h-full rounded-2xl bg-zinc-800 border-2 border-dashed border-zinc-700 flex items-center justify-center overflow-hidden">
-                    {profileImage ? (
-                      <img src={profileImage} alt="Profile" className="w-full h-full object-cover" />
-                    ) : (
-                      <User size={48} className="text-zinc-600" />
-                    )}
-                  </div>
-                  <label className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl flex items-center justify-center cursor-pointer">
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={handleProfileImageUpload}
-                      disabled={isUploading}
-                      className="hidden"
-                    />
-                    <div className="text-center">
-                      <Upload size={20} className="text-white mx-auto mb-1" />
-                      <p className="text-[10px] text-white uppercase tracking-tighter">
-                        {isUploading ? 'Uploading...' : 'Change'}
-                      </p>
-                    </div>
-                  </label>
+                <label className="text-[10px] uppercase tracking-widest text-zinc-500 block mb-2">Email Address</label>
+                <div className="bg-black rounded-xl p-4 border border-zinc-800">
+                  <p className="text-white font-medium">{user?.email}</p>
                 </div>
               </div>
 
-              <div className="space-y-6">
-                <div>
-                  <label className="text-[10px] uppercase tracking-widest text-zinc-500 block mb-2">Email Address</label>
-                  <div className="bg-black rounded-xl p-4 border border-zinc-800">
-                    <p className="text-white font-medium">{user?.email}</p>
-                  </div>
-                </div>
-
-                <div>
-                  <label className="text-[10px] uppercase tracking-widest text-zinc-500 block mb-2">User ID</label>
-                  <div className="bg-black rounded-xl p-4 border border-zinc-800">
-                    <p className="text-zinc-500 text-[10px] font-mono break-all">{user?.id}</p>
-                  </div>
+              <div>
+                <label className="text-[10px] uppercase tracking-widest text-zinc-500 block mb-2">User ID</label>
+                <div className="bg-black rounded-xl p-4 border border-zinc-800">
+                  <p className="text-zinc-500 text-[10px] font-mono break-all">{user?.id}</p>
                 </div>
               </div>
             </div>
           </div>
-        </motion.section>
-      </main>
-    </div>
+        </div>
+      </motion.section>
+    </>
   )
 }

@@ -6,6 +6,7 @@ import Dashboard from './pages/Dashboard'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import Projects from './pages/Projects'
+import CreatePost from './pages/CreatePost'
 
 function App() {
   return (
@@ -31,6 +32,16 @@ function App() {
             <ProtectedRoute>
               <AppLayout>
                 <Projects />
+              </AppLayout>
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/create-post" 
+          element={
+            <ProtectedRoute>
+              <AppLayout>
+                <CreatePost />
               </AppLayout>
             </ProtectedRoute>
           } 

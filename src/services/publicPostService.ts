@@ -3,7 +3,7 @@ import { supabase } from "./supabase"
 export const getAllPublicPosts = async () => {
   const { data, error } = await supabase
     .from("posts")
-    .select("*, profiles:user_id(email)")
+    .select("*")
     .eq("status", "published")
     .order("created_at", { ascending: false })
 
@@ -14,7 +14,7 @@ export const getAllPublicPosts = async () => {
 export const getPostById = async (id: string) => {
   const { data, error } = await supabase
     .from("posts")
-    .select("*, profiles:user_id(email)")
+    .select("*")
     .eq("id", id)
     .single()
 

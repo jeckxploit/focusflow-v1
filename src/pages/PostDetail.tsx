@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import { getPostById } from "../services/publicPostService"
 import { motion } from "framer-motion"
-import { ArrowLeft, Smartphone, Activity, Box, Calendar } from "lucide-react"
+import { ArrowLeft, Smartphone, Activity, Box, Calendar, User } from "lucide-react"
 
 export default function PostDetail() {
   const { slug } = useParams()
@@ -76,11 +76,11 @@ export default function PostDetail() {
           <footer className="pt-12 border-t border-zinc-900 flex justify-between items-center">
             <div className="flex items-center gap-4">
               <div className="w-10 h-10 rounded-xl bg-zinc-900 flex items-center justify-center text-white font-black italic">
-                {post.profiles?.email?.[0]?.toUpperCase() || '?'}
+                <User size={18} />
               </div>
               <div>
                 <p className="text-[10px] text-zinc-600 uppercase font-bold">Operator</p>
-                <p className="text-xs font-black uppercase italic">{post.profiles?.email?.split('@')[0] || 'Unknown'}</p>
+                <p className="text-xs font-black uppercase italic">System Node</p>
               </div>
             </div>
           </footer>

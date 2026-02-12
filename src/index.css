@@ -1,1 +1,24 @@
 @import "tailwindcss";
+
+@theme {
+  --color-premium-glow: rgba(255, 255, 255, 0.03);
+}
+
+body {
+  @apply bg-black text-white antialiased;
+  background-image: radial-gradient(circle at 50% -20%, #18181b 0%, #000000 100%);
+  background-attachment: fixed;
+}
+
+/* Custom scrollbar for premium feel */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-zinc-800 rounded-full hover:bg-zinc-700 transition-colors;
+}

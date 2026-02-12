@@ -12,14 +12,18 @@ export default function PostDetail() {
 
   useEffect(() => {
     if (slug) {
-      getPostById(slug).then(data => {
-        setPost(data)
-        setLoading(false)
-      }).catch(() => navigate('/'))
+      getPostById(slug)
+        .then(data => {
+          if (!data) throw new Error("Not found")
+          setPost(data)
+          setLoading(false)
+        })
+        .catch(() => navigate('/'))
     }
   }, [slug, navigate])
 
   if (loading) return <div className="min-h-screen bg-black flex items-center justify-center text-zinc-500 uppercase tracking-widest font-black italic">Accessing Node...</div>
+  if (!post) return null
 
   return (
     <div className="min-h-screen bg-black text-white p-8 lg:p-24">
@@ -58,7 +62,7 @@ export default function PostDetail() {
               <div className="bg-zinc-950 border border-zinc-900 p-6 rounded-3xl col-span-2 md:col-span-1">
                 <Smartphone size={16} className="text-zinc-700 mb-3" />
                 <p className="text-[10px] text-zinc-600 uppercase font-bold mb-1">Unit ID</p>
-                <p className="text-xs font-black uppercase italic truncate">{post.id.slice(0, 12)}</p>
+                <p className="text-xs font-black uppercase italic truncate">{post.id?.slice(0, 12)}</p>
               </div>
             </div>
           </header>
@@ -72,11 +76,11 @@ export default function PostDetail() {
           <footer className="pt-12 border-t border-zinc-900 flex justify-between items-center">
             <div className="flex items-center gap-4">
               <div className="w-10 h-10 rounded-xl bg-zinc-900 flex items-center justify-center text-white font-black italic">
-                {post.profiles?.email?.[0].toUpperCase()}
+                {post.profiles?.email?.[0]?.toUpperCase() || '?'}
               </div>
               <div>
                 <p className="text-[10px] text-zinc-600 uppercase font-bold">Operator</p>
-                <p className="text-xs font-black uppercase italic">{post.profiles?.email?.split('@')[0]}</p>
+                <p className="text-xs font-black uppercase italic">{post.profiles?.email?.split('@')[0] || 'Unknown'}</p>
               </div>
             </div>
           </footer>

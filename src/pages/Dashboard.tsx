@@ -1,21 +1,25 @@
-import { motion } from 'framer-motion'
-import { LogOut, Shield, Smartphone, Zap, User, Upload } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { LogOut, Shield, Smartphone, Zap, User, Upload, Trash2, FileText, Loader2 } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import toast from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '../components/ui/Button'
 import { useAuth } from '../hooks/useAuth'
 import { supabase } from '../services/supabase'
+import { getPosts, deletePost } from '../services/postService'
 
 export default function Dashboard() {
   const { user } = useAuth()
   const navigate = useNavigate()
   const [profileImage, setProfileImage] = useState<string>('')
   const [isUploading, setIsUploading] = useState(false)
+  const [posts, setPosts] = useState<any[]>([])
+  const [isLoadingPosts, setIsLoadingPosts] = useState(true)
 
   useEffect(() => {
     if (user) {
       getProfile()
+      fetchPosts()
     }
   }, [user])
 
@@ -31,6 +35,29 @@ export default function Dashboard() {
       if (data?.avatar_url) setProfileImage(data.avatar_url)
     } catch (error) {
       console.error('Error loading profile:', error)
+    }
+  }
+
+  const fetchPosts = async () => {
+    setIsLoadingPosts(true)
+    try {
+      const data = await getPosts()
+      setPosts(data || [])
+    } catch (error: any) {
+      toast.error('Gagal memuat data produksi')
+    } finally {
+      setIsLoadingPosts(false)
+    }
+  }
+
+  const handleDeletePost = async (id: string) => {
+    const loadingToast = toast.loading('Menghapus data...')
+    try {
+      await deletePost(id)
+      setPosts(posts.filter(post => post.id !== id))
+      toast.success('Data berhasil dihapus', { id: loadingToast })
+    } catch (error: any) {
+      toast.error('Gagal menghapus data', { id: loadingToast })
     }
   }
 
@@ -149,8 +176,69 @@ export default function Dashboard() {
           ))}
         </motion.div>
 
+        {/* Production Feed Section (List + Delete) */}
+        <motion.section 
+          className="mb-12"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.4 }}
+        >
+          <div className="bg-zinc-900 border border-zinc-800 rounded-[2.5rem] p-8">
+            <div className="flex items-center justify-between mb-8">
+              <div className="flex items-center gap-3">
+                <FileText size={24} className="text-white" />
+                <h2 className="text-2xl font-bold">Production Feed</h2>
+              </div>
+              <Button variant="secondary" onClick={fetchPosts} className="text-[10px] uppercase tracking-widest">
+                Refresh Feed
+              </Button>
+            </div>
+
+            {isLoadingPosts ? (
+              <div className="flex flex-col items-center justify-center py-12 text-zinc-500">
+                <Loader2 className="animate-spin mb-4" size={32} />
+                <p className="text-sm uppercase tracking-widest">Syncing with database...</p>
+              </div>
+            ) : posts.length === 0 ? (
+              <div className="text-center py-12 border-2 border-dashed border-zinc-800 rounded-[2rem]">
+                <p className="text-zinc-500 uppercase tracking-widest text-xs">Belum ada data produksi</p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                <AnimatePresence mode="popLayout">
+                  {posts.map((post) => (
+                    <motion.div 
+                      key={post.id}
+                      layout
+                      initial={{ opacity: 0, scale: 0.95 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.95 }}
+                      className="bg-black border border-zinc-800 p-6 rounded-2xl flex items-center justify-between group hover:border-zinc-600 transition-all"
+                    >
+                      <div className="flex-1">
+                        <h3 className="font-bold text-lg mb-1">{post.title}</h3>
+                        <p className="text-zinc-500 text-sm line-clamp-1">{post.content}</p>
+                        <span className="text-[10px] text-zinc-600 uppercase tracking-tighter mt-2 block">
+                          Created: {new Date(post.created_at).toLocaleDateString()}
+                        </span>
+                      </div>
+                      <Button 
+                        variant="secondary" 
+                        onClick={() => handleDeletePost(post.id)}
+                        className="ml-4 p-3 rounded-xl text-zinc-500 hover:text-red-500 hover:bg-red-500/10 transition-colors"
+                      >
+                        <Trash2 size={18} />
+                      </Button>
+                    </motion.div>
+                  ))}
+                </AnimatePresence>
+              </div>
+            )}
+          </div>
+        </motion.section>
+
         <motion.div 
-          className="p-1 w-full bg-gradient-to-r from-zinc-800 via-zinc-400 to-zinc-800 rounded-[2.5rem]"
+          className="p-1 w-full bg-gradient-to-r from-zinc-800 via-zinc-400 to-zinc-800 rounded-[2.5rem] mb-12"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.5 }}
@@ -167,7 +255,6 @@ export default function Dashboard() {
         </motion.div>
 
         <motion.section 
-          className="mt-16"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.6 }}

@@ -2,7 +2,7 @@ import { useState } from "react"
 import { createPost } from "../services/postService"
 import { useNavigate } from "react-router-dom"
 import { motion } from "framer-motion"
-import { ArrowLeft, Save, FileText, Type, AlignLeft } from "lucide-react"
+import { ArrowLeft, Save, FileText, Type, AlignLeft, Globe, Lock } from "lucide-react"
 import { Button } from "../components/ui/Button"
 import { Input } from "../components/ui/Input"
 import toast from "react-hot-toast"
@@ -10,6 +10,7 @@ import toast from "react-hot-toast"
 export default function CreatePost() {
   const [title, setTitle] = useState("")
   const [content, setContent] = useState("")
+  const [status, setStatus] = useState<'draft' | 'published'>('draft')
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
 
@@ -24,7 +25,7 @@ export default function CreatePost() {
     const loadingToast = toast.loading("Menyimpan data produksi...")
     
     try {
-      await createPost(title, content)
+      await createPost(title, content, status)
       toast.success("Data berhasil disimpan!", { id: loadingToast })
       navigate("/dashboard")
     } catch (error: any) {
@@ -83,6 +84,25 @@ export default function CreatePost() {
                 onChange={(e) => setContent(e.target.value)}
                 className="w-full min-h-[200px] bg-black border border-zinc-800 rounded-2xl p-4 text-white placeholder:text-zinc-600 focus:outline-none focus:border-zinc-500 transition-colors resize-none"
               />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <button
+                type="button"
+                onClick={() => setStatus('draft')}
+                className={`flex items-center justify-center gap-3 p-4 rounded-2xl border transition-all ${status === 'draft' ? 'bg-white text-black border-white' : 'bg-black text-zinc-500 border-zinc-800'}`}
+              >
+                <Lock size={18} />
+                <span className="text-[10px] font-black uppercase tracking-widest">Draft</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setStatus('published')}
+                className={`flex items-center justify-center gap-3 p-4 rounded-2xl border transition-all ${status === 'published' ? 'bg-white text-black border-white' : 'bg-black text-zinc-500 border-zinc-800'}`}
+              >
+                <Globe size={18} />
+                <span className="text-[10px] font-black uppercase tracking-widest">Public</span>
+              </button>
             </div>
 
             <Button 

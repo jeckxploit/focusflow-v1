@@ -7,6 +7,7 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import Projects from './pages/Projects'
 import CreatePost from './pages/CreatePost'
+import PublicBlog from './pages/PublicBlog'
 
 function App() {
   return (
@@ -27,8 +28,8 @@ function App() {
         <Route path="/" element={<Navigate to="/login" />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/blog/:userId" element={<PublicBlog />} />
         
-        {/* Protected Routes wrapped with AppLayout */}
         <Route 
           path="/dashboard" 
           element={

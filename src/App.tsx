@@ -35,6 +35,7 @@ function App() {
         <Route path="/post/:slug" element={<PostDetail />} />
 
         {/* Standardized App Factory Layout */}
+        <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
         <Route
           element={
             <ProtectedRoute>
@@ -42,7 +43,7 @@ function App() {
             </ProtectedRoute>
           }
         >
-          <Route path="/dashboard" element={<Dashboard />} />
+          {/* Dashboard removed from here to avoid double layout */}
           <Route path="/create" element={<CreatePost />} />
           <Route path="/projects" element={<Projects />} />
           <Route path="/habit" element={<Habit />} />

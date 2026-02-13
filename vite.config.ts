@@ -11,9 +11,9 @@ export default defineConfig({
         enabled: true
       },
       manifest: {
-        name: 'PWA Factory Template',
-        short_name: 'PWA Factory',
-        description: 'Master template for 30 PWA production system',
+        name: 'FocusFlow',
+        short_name: 'FocusFlow',
+        description: 'Smart Pomodoro Focus Timer',
         theme_color: '#000000',
         background_color: '#000000',
         display: 'standalone',

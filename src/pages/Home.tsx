@@ -33,7 +33,7 @@ export default function Home() {
           <div className="w-10 h-10 bg-white rounded-2xl flex items-center justify-center">
             <Cpu size={20} className="text-black" />
           </div>
-          <span className="font-black tracking-tighter text-2xl uppercase italic">JECK.</span>
+          <span className="font-black tracking-tighter text-2xl uppercase italic">FocusFlow</span>
         </div>
         <Link to="/login">
           <Button variant="outline" size="sm">Access Terminal</Button>
@@ -46,10 +46,10 @@ export default function Home() {
             <Activity size={14} className="animate-pulse text-green-500" /> Global Production Feed
           </div>
           <h1 className="text-6xl md:text-9xl font-black tracking-tighter leading-none mb-8">
-            OPEN <span className="text-zinc-900">SOURCE</span><br />ENGINE
+            FOCUS <span className="text-zinc-900">FLOW</span><br />TIMER
           </h1>
           <p className="text-zinc-500 max-w-xl text-lg uppercase tracking-tight font-medium">
-            Menampilkan output real-time dari seluruh unit produksi PWA Factory.
+            Smart Pomodoro timer for peak productivity and deep work.
           </p>
         </header>
 

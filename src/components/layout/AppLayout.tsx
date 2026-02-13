@@ -2,7 +2,7 @@ import { motion } from "framer-motion"
 import Sidebar from "./Sidebar"
 import { Outlet } from "react-router-dom"
 
-export default function AppLayout() {
+export default function AppLayout({ children }: { children?: React.ReactNode }) {
   return (
     <div className="engine-container">
       <Sidebar />
@@ -13,7 +13,7 @@ export default function AppLayout() {
         className="lg:pl-80 min-h-screen transition-all duration-500"
       >
         <div className="p-6 lg:p-12 xl:p-20 max-w-[1600px] mx-auto">
-          <Outlet />
+          {children || <Outlet />}
         </div>
       </motion.main>
     </div>

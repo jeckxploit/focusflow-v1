@@ -60,8 +60,8 @@ export default function Sidebar() {
                     <Cpu size={24} className="text-black relative z-10" />
                   </div>
                   <div>
-                    <span className="block font-black tracking-tighter text-2xl uppercase italic leading-none">JECK.</span>
-                    <span className="text-[10px] font-bold text-zinc-600 uppercase tracking-[0.3em]">Core OS v2</span>
+                    <span className="block font-black tracking-tighter text-2xl uppercase italic leading-none">FocusFlow</span>
+                    <span className="text-[10px] font-bold text-zinc-600 uppercase tracking-[0.3em]">Smart Pomodoro</span>
                   </div>
                 </div>
                 <button onClick={toggleSidebar} className="lg:hidden p-3 hover:bg-zinc-900/50 rounded-2xl transition-colors">

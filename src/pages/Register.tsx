@@ -15,7 +15,7 @@ export default function Register() {
     e.preventDefault()
     setLoading(true)
     const { error } = await supabase.auth.signUp({ email, password })
-    
+
     if (error) {
       toast.error(error.message)
       setLoading(false)
@@ -30,19 +30,19 @@ export default function Register() {
       <form onSubmit={handleRegister} className="bg-zinc-900 p-8 rounded-[2.5rem] w-full max-w-md border border-zinc-800">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-black tracking-tighter mb-2">DAFTAR</h1>
-          <p className="text-zinc-500 text-sm">Mulai perjalanan 30 hari PWA</p>
+          <p className="text-zinc-500 text-sm">Mulai perjalanan fokus bersama FocusFlow</p>
         </div>
-        
+
         <div className="space-y-4 mb-8">
-          <Input 
-            type="email" 
-            placeholder="Email Address" 
+          <Input
+            type="email"
+            placeholder="Email Address"
             onChange={(e) => setEmail(e.target.value)}
             required
           />
-          <Input 
-            type="password" 
-            placeholder="Password" 
+          <Input
+            type="password"
+            placeholder="Password"
             onChange={(e) => setPassword(e.target.value)}
             required
           />

@@ -7,7 +7,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg'],
+      includeAssets: ['logo.svg', 'pwa-192.png', 'pwa-512.png', 'apple-touch-icon.png'],
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg,woff,woff2}'],
         runtimeCaching: [
@@ -35,8 +35,8 @@ export default defineConfig({
         name: 'FocusFlow Engine',
         short_name: 'FocusFlow',
         description: 'Premium High-Performance Focus Timer & Productivity Engine',
-        theme_color: '#000000',
-        background_color: '#000000',
+        theme_color: '#0f0f1a',
+        background_color: '#0f0f1a',
         display: 'standalone',
         orientation: 'portrait',
         scope: '/',

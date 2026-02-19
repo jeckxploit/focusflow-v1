@@ -2,10 +2,32 @@ import { useState } from "react"
 import { createPost } from "../services/postService"
 import { useNavigate } from "react-router-dom"
 import { motion } from "framer-motion"
-import { ArrowLeft, Save, FileText, Type, AlignLeft, Globe, Lock } from "lucide-react"
+import { ArrowLeft, Save, Type, AlignLeft, Globe, Lock, Cpu, Sparkles } from "lucide-react"
 import { Button } from "../components/ui/Button"
 import { Input } from "../components/ui/Input"
 import toast from "react-hot-toast"
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+}
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.6,
+      ease: [0.16, 1, 0.3, 1] as any,
+    },
+  },
+}
 
 export default function CreatePost() {
   const [title, setTitle] = useState("")
@@ -37,86 +59,126 @@ export default function CreatePost() {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white p-6 lg:p-12">
-      <div className="max-w-2xl mx-auto">
-        <button
-          onClick={() => navigate(-1)}
-          className="flex items-center gap-2 text-zinc-500 hover:text-white transition-colors mb-8 group"
-        >
-          <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
-          <span className="text-sm uppercase tracking-widest font-bold">Kembali</span>
-        </button>
+    <div className="p-6 lg:p-12 max-w-4xl mx-auto">
+      <motion.button
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        onClick={() => navigate(-1)}
+        className="flex items-center gap-2 text-zinc-500 hover:text-white transition-colors mb-12 group"
+      >
+        <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
+        <span className="text-[10px] uppercase tracking-[0.3em] font-black italic">Return to Origin</span>
+      </motion.button>
+
+      <motion.div
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+        className="space-y-8"
+      >
+        {/* Header Section */}
+        <motion.div variants={itemVariants} className="flex flex-col md:flex-row md:items-center gap-6 mb-12">
+          <div className="w-16 h-16 rounded-2xl bg-white flex items-center justify-center text-black shadow-[0_0_30px_rgba(255,255,255,0.2)]">
+            <Cpu size={32} />
+          </div>
+          <div>
+            <h1 className="text-4xl lg:text-5xl premium-gradient-text tracking-tighter">
+              Production Unit
+            </h1>
+            <p className="text-zinc-500 font-bold tracking-wide uppercase text-[10px] mt-2 flex items-center gap-2">
+              <Sparkles size={12} className="text-emerald-500" />
+              Manifesting new data structures into the neural network
+            </p>
+          </div>
+        </motion.div>
 
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-zinc-900 border border-zinc-800 rounded-[2.5rem] p-8 md:p-12"
+          variants={itemVariants}
+          className="bento-card p-1 md:p-1"
         >
-          <div className="flex items-center gap-4 mb-10">
-            <div className="w-12 h-12 rounded-2xl bg-white flex items-center justify-center text-black">
-              <FileText size={24} />
-            </div>
-            <div>
-              <h1 className="text-3xl font-black tracking-tighter uppercase italic">Create Post</h1>
-              <p className="text-zinc-500 text-sm">Tambahkan data baru ke mesin produksi.</p>
-            </div>
-          </div>
-
-          <form onSubmit={handleSubmit} className="space-y-8">
-            <div className="space-y-2">
-              <label className="flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-zinc-500 font-bold ml-1">
-                <Type size={12} /> Judul Produksi
+          <form onSubmit={handleSubmit} className="p-8 md:p-12 space-y-10">
+            {/* Title Input Area */}
+            <div className="space-y-4">
+              <label className="flex items-center gap-2 text-[10px] uppercase tracking-[0.4em] text-zinc-500 font-black italic ml-1">
+                <Type size={14} className="text-emerald-500" /> Production Label
               </label>
               <Input
-                placeholder="Masukkan judul..."
+                placeholder="Identify this production cycle..."
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="bg-black border-zinc-800 focus:border-zinc-500 h-14 text-lg"
+                className="bg-black/40 border-zinc-800/50 focus:border-emerald-500/50 h-16 text-xl font-bold tracking-tight rounded-2xl"
               />
             </div>
 
-            <div className="space-y-2">
-              <label className="flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-zinc-500 font-bold ml-1">
-                <AlignLeft size={12} /> Konten / Deskripsi
+            {/* Content Textarea Area */}
+            <div className="space-y-4">
+              <label className="flex items-center gap-2 text-[10px] uppercase tracking-[0.4em] text-zinc-500 font-black italic ml-1">
+                <AlignLeft size={14} className="text-emerald-500" /> core logic / specification
               </label>
               <textarea
-                placeholder="Tuliskan detail produksi di sini..."
+                placeholder="Describe the technical implementation details..."
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
-                className="w-full min-h-[200px] bg-black border border-zinc-800 rounded-2xl p-4 text-white placeholder:text-zinc-600 focus:outline-none focus:border-zinc-500 transition-colors resize-none"
+                className="w-full min-h-[250px] bg-black/40 border border-zinc-800/50 rounded-2xl p-6 text-white placeholder:text-zinc-700 focus:outline-none focus:border-emerald-500/50 transition-all resize-none shadow-inner"
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <button
-                type="button"
-                onClick={() => setStatus('draft')}
-                className={`flex items-center justify-center gap-3 p-4 rounded-2xl border transition-all ${status === 'draft' ? 'bg-white text-black border-white' : 'bg-black text-zinc-500 border-zinc-800'}`}
-              >
-                <Lock size={18} />
-                <span className="text-[10px] font-black uppercase tracking-widest">Draft</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => setStatus('published')}
-                className={`flex items-center justify-center gap-3 p-4 rounded-2xl border transition-all ${status === 'published' ? 'bg-white text-black border-white' : 'bg-black text-zinc-500 border-zinc-800'}`}
-              >
-                <Globe size={18} />
-                <span className="text-[10px] font-black uppercase tracking-widest">Public</span>
-              </button>
+            {/* Status Selection */}
+            <div className="space-y-4">
+              <label className="flex items-center gap-2 text-[10px] uppercase tracking-[0.4em] text-zinc-500 font-black italic ml-1">
+                <Globe size={14} className="text-emerald-500" /> exposure protocol
+              </label>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <button
+                  type="button"
+                  onClick={() => setStatus('draft')}
+                  className={`flex items-center justify-between p-6 rounded-2xl border transition-all group ${status === 'draft' ? 'bg-zinc-800 border-zinc-700 text-white' : 'bg-transparent border-zinc-800/50 text-zinc-600 hover:border-zinc-700'}`}
+                >
+                  <div className="flex items-center gap-4">
+                    <div className={`p-2 rounded-xl transition-colors ${status === 'draft' ? 'bg-zinc-700' : 'bg-zinc-900'}`}>
+                      <Lock size={18} />
+                    </div>
+                    <div className="text-left">
+                      <span className="block text-[11px] font-black uppercase tracking-widest">Internal Only</span>
+                      <span className="text-[9px] text-zinc-500 uppercase tracking-tighter">Encrypted Local Storage</span>
+                    </div>
+                  </div>
+                  {status === 'draft' && <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]" />}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setStatus('published')}
+                  className={`flex items-center justify-between p-6 rounded-2xl border transition-all group ${status === 'published' ? 'bg-emerald-500/10 border-emerald-500/30 text-white' : 'bg-transparent border-zinc-800/50 text-zinc-600 hover:border-zinc-700'}`}
+                >
+                  <div className="flex items-center gap-4">
+                    <div className={`p-2 rounded-xl transition-colors ${status === 'published' ? 'bg-emerald-500/20 text-emerald-500' : 'bg-zinc-900'}`}>
+                      <Globe size={18} />
+                    </div>
+                    <div className="text-left">
+                      <span className="block text-[11px] font-black uppercase tracking-widest">Global Access</span>
+                      <span className="text-[9px] text-zinc-500 uppercase tracking-tighter">Public Network Visibility</span>
+                    </div>
+                  </div>
+                  {status === 'published' && <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]" />}
+                </button>
+              </div>
             </div>
 
-            <Button
-              type="submit"
-              disabled={loading}
-              className="w-full h-14 rounded-2xl text-sm uppercase tracking-widest font-black flex items-center justify-center gap-2"
-            >
-              <Save size={18} />
-              {loading ? "Saving..." : "Save Production Data"}
-            </Button>
+            {/* Action Bar */}
+            <div className="pt-8 border-t border-zinc-800/30">
+              <Button
+                type="submit"
+                disabled={loading}
+                className="w-full h-16 rounded-2xl text-[11px] uppercase tracking-[0.3em] font-black flex items-center justify-center gap-3 bg-white text-black hover:scale-[1.02] active:scale-95 shadow-[0_20px_40px_rgba(0,0,0,0.4)]"
+              >
+                <Save size={20} />
+                {loading ? "Synchronizing Data..." : "Initiate System Save"}
+              </Button>
+            </div>
           </form>
         </motion.div>
-      </div>
+      </motion.div>
     </div>
   )
 }

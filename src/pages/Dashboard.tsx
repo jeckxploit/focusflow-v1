@@ -207,8 +207,8 @@ export default function Dashboard() {
             </svg>
 
             <div className="absolute flex flex-col items-center justify-center z-20">
-              <span className="text-zinc-600 dark:text-zinc-500 text-[10px] font-black uppercase tracking-[0.4em] mb-2">T-Minus</span>
-              <h2 className="text-6xl lg:text-7xl font-black tracking-tighter tabular-nums italic leading-tight text-zinc-900 dark:text-white drop-shadow-2xl">
+              <span className="text-zinc-400 dark:text-zinc-300 text-[10px] font-black uppercase tracking-[0.4em] mb-2">T-Minus</span>
+              <h2 className="text-6xl lg:text-7xl font-black tracking-tighter tabular-nums italic leading-tight text-white drop-shadow-[0_0_30px_rgba(255,255,255,0.3)]">
                 {String(minutes).padStart(2, '0')}
                 <span className={isRunning ? 'animate-pulse opacity-50' : 'opacity-20'}>:</span>
                 {String(seconds).padStart(2, '0')}

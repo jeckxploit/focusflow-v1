@@ -59,121 +59,121 @@ export default function CreatePost() {
   }
 
   return (
-    <div className="p-6 lg:p-12 max-w-4xl mx-auto">
+    <div className="p-4 xs:p-6 sm:p-12 max-w-4xl mx-auto">
       <motion.button
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
         onClick={() => navigate(-1)}
-        className="flex items-center gap-2 text-zinc-500 hover:text-white transition-colors mb-12 group"
+        className="flex items-center gap-2 text-zinc-500 hover:text-white transition-colors mb-8 xs:mb-12 group"
       >
-        <ArrowLeft size={18} className="group-hover:-translate-x-1 transition-transform" />
-        <span className="text-[10px] uppercase tracking-[0.3em] font-black italic">Return to Origin</span>
+        <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
+        <span className="text-[9px] xs:text-[10px] uppercase tracking-[0.3em] font-black italic">Return to Origin</span>
       </motion.button>
 
       <motion.div
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="space-y-8"
+        className="space-y-6 xs:space-y-8"
       >
         {/* Header Section */}
-        <motion.div variants={itemVariants} className="flex flex-col md:flex-row md:items-center gap-6 mb-12">
-          <div className="w-16 h-16 rounded-2xl bg-white flex items-center justify-center text-black shadow-[0_0_30px_rgba(255,255,255,0.2)]">
-            <Cpu size={32} />
+        <motion.div variants={itemVariants} className="flex flex-col gap-4 mb-8 xs:mb-12">
+          <div className="w-12 h-12 xs:w-14 xs:h-14 sm:w-16 sm:h-16 rounded-xl xs:rounded-2xl bg-white flex items-center justify-center text-black shadow-[0_0_30px_rgba(255,255,255,0.2)]">
+            <Cpu size={28} />
           </div>
           <div>
-            <h1 className="text-4xl lg:text-5xl premium-gradient-text tracking-tighter">
+            <h1 className="text-3xl xs:text-4xl sm:text-5xl premium-gradient-text tracking-tighter">
               Production Unit
             </h1>
-            <p className="text-zinc-500 font-bold tracking-wide uppercase text-[10px] mt-2 flex items-center gap-2">
+            <p className="text-zinc-500 font-bold tracking-wide uppercase text-[8px] xs:text-[10px] mt-2 flex items-center gap-2">
               <Sparkles size={12} className="text-emerald-500" />
-              Manifesting new data structures into the neural network
+              Manifesting new data structures
             </p>
           </div>
         </motion.div>
 
         <motion.div
           variants={itemVariants}
-          className="bento-card p-1 md:p-1"
+          className="bento-card p-0.5 xs:p-1"
         >
-          <form onSubmit={handleSubmit} className="p-8 md:p-12 space-y-10">
+          <form onSubmit={handleSubmit} className="p-4 xs:p-6 sm:p-8 md:p-12 space-y-6 xs:space-y-8">
             {/* Title Input Area */}
-            <div className="space-y-4">
-              <label className="flex items-center gap-2 text-[10px] uppercase tracking-[0.4em] text-zinc-500 font-black italic ml-1">
+            <div className="space-y-3 xs:space-y-4">
+              <label className="flex items-center gap-2 text-[8px] xs:text-[10px] uppercase tracking-[0.4em] text-zinc-500 font-black italic ml-1">
                 <Type size={14} className="text-emerald-500" /> Production Label
               </label>
               <Input
-                placeholder="Identify this production cycle..."
+                placeholder="Identify this production..."
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="bg-black/40 border-zinc-800/50 focus:border-emerald-500/50 h-16 text-xl font-bold tracking-tight rounded-2xl"
+                className="bg-black/40 border-zinc-800/50 focus:border-emerald-500/50 h-12 xs:h-14 sm:h-16 text-base xs:text-lg font-bold tracking-tight rounded-xl xs:rounded-2xl"
               />
             </div>
 
             {/* Content Textarea Area */}
-            <div className="space-y-4">
-              <label className="flex items-center gap-2 text-[10px] uppercase tracking-[0.4em] text-zinc-500 font-black italic ml-1">
-                <AlignLeft size={14} className="text-emerald-500" /> core logic / specification
+            <div className="space-y-3 xs:space-y-4">
+              <label className="flex items-center gap-2 text-[8px] xs:text-[10px] uppercase tracking-[0.4em] text-zinc-500 font-black italic ml-1">
+                <AlignLeft size={14} className="text-emerald-500" /> Core Logic
               </label>
               <textarea
-                placeholder="Describe the technical implementation details..."
+                placeholder="Describe the technical implementation..."
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
-                className="w-full min-h-[250px] bg-black/40 border border-zinc-800/50 rounded-2xl p-6 text-white placeholder:text-zinc-700 focus:outline-none focus:border-emerald-500/50 transition-all resize-none shadow-inner"
+                className="w-full min-h-[200px] xs:min-h-[250px] bg-black/40 border border-zinc-800/50 rounded-xl xs:rounded-2xl p-4 xs:p-6 text-white placeholder:text-zinc-700 focus:outline-none focus:border-emerald-500/50 transition-all resize-none shadow-inner text-sm xs:text-base"
               />
             </div>
 
             {/* Status Selection */}
-            <div className="space-y-4">
-              <label className="flex items-center gap-2 text-[10px] uppercase tracking-[0.4em] text-zinc-500 font-black italic ml-1">
-                <Globe size={14} className="text-emerald-500" /> exposure protocol
+            <div className="space-y-3 xs:space-y-4">
+              <label className="flex items-center gap-2 text-[8px] xs:text-[10px] uppercase tracking-[0.4em] text-zinc-500 font-black italic ml-1">
+                <Globe size={14} className="text-emerald-500" /> Exposure
               </label>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 xs:gap-4">
                 <button
                   type="button"
                   onClick={() => setStatus('draft')}
-                  className={`flex items-center justify-between p-6 rounded-2xl border transition-all group ${status === 'draft' ? 'bg-zinc-800 border-zinc-700 text-white' : 'bg-transparent border-zinc-800/50 text-zinc-600 hover:border-zinc-700'}`}
+                  className={`flex items-center justify-between p-4 xs:p-6 rounded-xl xs:rounded-2xl border transition-all group ${status === 'draft' ? 'bg-zinc-800 border-zinc-700 text-white' : 'bg-transparent border-zinc-800/50 text-zinc-600 hover:border-zinc-700'}`}
                 >
-                  <div className="flex items-center gap-4">
-                    <div className={`p-2 rounded-xl transition-colors ${status === 'draft' ? 'bg-zinc-700' : 'bg-zinc-900'}`}>
+                  <div className="flex items-center gap-2 xs:gap-4">
+                    <div className={`p-1.5 xs:p-2 rounded-lg xs:rounded-xl transition-colors ${status === 'draft' ? 'bg-zinc-700' : 'bg-zinc-900'}`}>
                       <Lock size={18} />
                     </div>
-                    <div className="text-left">
-                      <span className="block text-[11px] font-black uppercase tracking-widest">Internal Only</span>
-                      <span className="text-[9px] text-zinc-500 uppercase tracking-tighter">Encrypted Local Storage</span>
+                    <div className="text-left min-w-0">
+                      <span className="block text-[9px] xs:text-[11px] font-black uppercase tracking-widest truncate">Internal</span>
+                      <span className="text-[7px] xs:text-[9px] text-zinc-500 uppercase tracking-tighter truncate hidden sm:block">Encrypted Storage</span>
                     </div>
                   </div>
-                  {status === 'draft' && <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]" />}
+                  {status === 'draft' && <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)] flex-shrink-0" />}
                 </button>
 
                 <button
                   type="button"
                   onClick={() => setStatus('published')}
-                  className={`flex items-center justify-between p-6 rounded-2xl border transition-all group ${status === 'published' ? 'bg-emerald-500/10 border-emerald-500/30 text-white' : 'bg-transparent border-zinc-800/50 text-zinc-600 hover:border-zinc-700'}`}
+                  className={`flex items-center justify-between p-4 xs:p-6 rounded-xl xs:rounded-2xl border transition-all group ${status === 'published' ? 'bg-emerald-500/10 border-emerald-500/30 text-white' : 'bg-transparent border-zinc-800/50 text-zinc-600 hover:border-zinc-700'}`}
                 >
-                  <div className="flex items-center gap-4">
-                    <div className={`p-2 rounded-xl transition-colors ${status === 'published' ? 'bg-emerald-500/20 text-emerald-500' : 'bg-zinc-900'}`}>
+                  <div className="flex items-center gap-2 xs:gap-4">
+                    <div className={`p-1.5 xs:p-2 rounded-lg xs:rounded-xl transition-colors ${status === 'published' ? 'bg-emerald-500/20 text-emerald-500' : 'bg-zinc-900'}`}>
                       <Globe size={18} />
                     </div>
-                    <div className="text-left">
-                      <span className="block text-[11px] font-black uppercase tracking-widest">Global Access</span>
-                      <span className="text-[9px] text-zinc-500 uppercase tracking-tighter">Public Network Visibility</span>
+                    <div className="text-left min-w-0">
+                      <span className="block text-[9px] xs:text-[11px] font-black uppercase tracking-widest truncate">Public</span>
+                      <span className="text-[7px] xs:text-[9px] text-zinc-500 uppercase tracking-tighter truncate hidden sm:block">Network Access</span>
                     </div>
                   </div>
-                  {status === 'published' && <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]" />}
+                  {status === 'published' && <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)] flex-shrink-0" />}
                 </button>
               </div>
             </div>
 
             {/* Action Bar */}
-            <div className="pt-8 border-t border-zinc-800/30">
+            <div className="pt-6 xs:pt-8 border-t border-zinc-800/30">
               <Button
                 type="submit"
                 disabled={loading}
-                className="w-full h-16 rounded-2xl text-[11px] uppercase tracking-[0.3em] font-black flex items-center justify-center gap-3 bg-white text-black hover:scale-[1.02] active:scale-95 shadow-[0_20px_40px_rgba(0,0,0,0.4)]"
+                className="w-full h-12 xs:h-14 sm:h-16 rounded-xl xs:rounded-2xl text-[9px] xs:text-[11px] uppercase tracking-[0.25em] font-black flex items-center justify-center gap-2 xs:gap-3 bg-white text-black hover:scale-[1.02] active:scale-95 shadow-[0_20px_40px_rgba(0,0,0,0.4)]"
               >
                 <Save size={20} />
-                {loading ? "Synchronizing Data..." : "Initiate System Save"}
+                {loading ? "Syncing..." : "Save Data"}
               </Button>
             </div>
           </form>

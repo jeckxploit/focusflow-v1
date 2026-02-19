@@ -16,7 +16,7 @@ export default function AppLayout({ children }: { children?: React.ReactNode }) 
         transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
         className="lg:pl-80 min-h-screen transition-all duration-500"
       >
-        <div className="p-4 xs:p-6 lg:p-12 xl:p-20 max-w-[1600px] mx-auto relative z-10">
+        <div className="pt-16 xs:pt-20 p-4 xs:p-6 lg:p-12 xl:p-20 max-w-[1600px] mx-auto relative z-10">
           {children || <Outlet />}
         </div>
       </motion.main>

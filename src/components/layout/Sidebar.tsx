@@ -1,5 +1,6 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import { BarChart3, Home, Menu, Settings, X, PlusCircle, Smartphone, Cpu, ClipboardList, LogOut } from 'lucide-react'
+import { BarChart3, Home, Menu, Settings, X, PlusCircle, Smartphone, ClipboardList, LogOut } from 'lucide-react'
+import Logo from '../ui/Logo'
 import { useAppStore } from '../../store/useStore'
 import { useAuth } from '../../hooks/useAuth'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
@@ -57,7 +58,7 @@ export default function Sidebar() {
                 <div className="flex items-center gap-3 xs:gap-4">
                   <div className="w-10 h-10 xs:w-12 xs:h-12 bg-white rounded-xl xs:rounded-[1.25rem] flex items-center justify-center shadow-[0_0_30px_rgba(255,255,255,0.15)] relative overflow-hidden group">
                     <div className="absolute inset-0 bg-gradient-to-tr from-emerald-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                    <Cpu size={20} className="text-black relative z-10" />
+                    <Logo className="w-6 h-6 xs:w-7 xs:h-7 text-black relative z-10" />
                   </div>
                   <div>
                     <span className="block font-black tracking-tighter text-xl xs:text-2xl uppercase italic leading-none">FocusFlow</span>
